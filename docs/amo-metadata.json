@@ -1,0 +1,10 @@
+{
+  "summary": {
+    "en-US": "Five minutes of X timeline browsing per hour. Keep posting, messages and notifications available."
+  },
+  "categories": ["other"],
+  "version": {
+    "license": "AGPL-3.0-only",
+    "approval_notes": "Standalone MV3 extension. No network requests, analytics or remote code. Local storage holds one browse-window timestamp record. Rebuild submitted sources with Node 24 or the included Devenv environment: npm ci && npm run build. The Firefox output is dist/firefox. Svelte uses DOM-tree compilation, not dynamic HTML templates. OpenPost UI and Dither are bundled from the readable archives in vendor/."
+  }
+}
