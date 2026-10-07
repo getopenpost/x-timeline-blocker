@@ -1,0 +1,9 @@
+node_modules/
+dist/
+dist-firefox/
+artifacts/
+.devenv/
+.direnv/
+test-results/
+playwright-report/
+.impeccable/review/
