@@ -3,19 +3,28 @@ import { TimerCoordinator } from './coordinator';
 import { isHomeUrl } from './timer';
 const timer = new TimerCoordinator(browser.storage.local);
 const ALARM_NAME = 'timeline-transition';
-async function updateBadge() {
-  const status = await timer.status();
-  await browser.action.setBadgeText({
-    text: status.phase === 'active' ? '5m' : '',
+const MINUTE_MS = 60 * 1000;
+const BADGE_BLUE = '#1d4ed8';
+let badgeUpdates: Promise<void> = Promise.resolve();
+function updateBadge() {
+  const update = badgeUpdates.then(async () => {
+    const status = await timer.status();
+    const minutes = Math.ceil(status.remainingMs / MINUTE_MS);
+    await browser.action.setBadgeBackgroundColor({ color: BADGE_BLUE });
+    await browser.action.setBadgeText({
+      text: status.phase === 'active' ? `${minutes}m` : '',
+    });
+    await browser.alarms.clear(ALARM_NAME);
+    const when =
+      status.phase === 'active'
+        ? status.window!.endsAt - (minutes - 1) * MINUTE_MS
+        : status.phase === 'locked'
+          ? status.window!.nextAt
+          : null;
+    if (when !== null) await browser.alarms.create(ALARM_NAME, { when });
   });
-  await browser.alarms.clear(ALARM_NAME);
-  const when =
-    status.phase === 'active'
-      ? status.window!.endsAt
-      : status.phase === 'locked'
-        ? status.window!.nextAt
-        : null;
-  if (when !== null) await browser.alarms.create(ALARM_NAME, { when });
+  badgeUpdates = update.catch(() => undefined);
+  return update;
 }
 browser.runtime.onMessage.addListener(
   (message: unknown, sender: browser.Runtime.MessageSender) => {

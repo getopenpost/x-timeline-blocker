@@ -86,10 +86,30 @@ test('expiry and browser restart retain the lock, then allow a new five-minute g
   try {
     const id = await extensionId(context);
     let view = await popup(context, id);
+    const minuteBoundary = Date.now() + 3_000;
+    await view.evaluate(
+      `chrome.storage.local.set({timelineWindow:{version:1,startedAt:${minuteBoundary - 240_000},endsAt:${minuteBoundary + 60_000},nextAt:${minuteBoundary + 3_360_000}}})`,
+    );
+    await view.evaluate("chrome.runtime.sendMessage({type:'status'})");
+    expect(await view.evaluate('chrome.action.getBadgeText({})')).toBe('2m');
+    expect(
+      await view.evaluate('chrome.action.getBadgeBackgroundColor({})'),
+    ).toEqual([29, 78, 216, 255]);
+    expect(
+      (
+        await view.evaluate<{ scheduledTime: number }>(
+          "chrome.alarms.get('timeline-transition')",
+        )
+      ).scheduledTime,
+    ).toBe(minuteBoundary);
+    await expect
+      .poll(() => view.evaluate('chrome.action.getBadgeText({})'))
+      .toBe('1m');
     const now = Date.now();
     await view.evaluate(
       `chrome.storage.local.set({timelineWindow:{version:1,startedAt:${now - 299_000},endsAt:${now + 1_000},nextAt:${now + 3_301_000}}})`,
     );
+    await view.evaluate("chrome.runtime.sendMessage({type:'status'})");
     await expect(
       view.getByRole('heading', { name: 'Time left' }),
     ).toBeVisible();
@@ -98,6 +118,9 @@ test('expiry and browser restart retain the lock, then allow a new five-minute g
     await expect(expiring.getByRole('article').first()).toBeVisible();
     await expect(expiring.getByRole('article').first()).toBeHidden();
     await expect(view.getByRole('heading', { name: 'Back in' })).toBeVisible();
+    await expect
+      .poll(() => view.evaluate('chrome.action.getBadgeText({})'))
+      .toBe('');
     await context.close();
     context = await launch(profile);
     view = await popup(context, await extensionId(context));
