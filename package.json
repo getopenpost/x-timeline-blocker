@@ -1,0 +1,59 @@
+{
+  "name": "@getopenpost/x-timeline-blocker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "AGPL-3.0-only",
+  "description": "Five minutes of X timeline browsing per hour.",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "svelte-check --tsconfig tsconfig.json && tsc --noEmit && eslint . && prettier --check .",
+    "format": "prettier --write .",
+    "test": "vitest run",
+    "test:browser": "npm run build && playwright test",
+    "lint:firefox": "web-ext lint --source-dir dist/firefox --warnings-as-errors",
+    "verify": "npm run check && npm test && npm run test:browser && npm run lint:firefox",
+    "package": "npm run build && node scripts/package.mjs",
+    "dev": "vite --host 127.0.0.1"
+  },
+  "dependencies": {
+    "@fontsource-variable/geist": "^5.2.8",
+    "@fontsource-variable/geist-mono": "^5.2.8",
+    "@fontsource-variable/manrope": "^5.2.8",
+    "@openpost/dither": "file:vendor/openpost-dither-0.1.0.tgz",
+    "@openpost/ui": "file:vendor/openpost-ui-0.1.0.tgz",
+    "svelte": "^5.51.0",
+    "webextension-polyfill": "^0.12.0"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.63.0",
+    "@sveltejs/vite-plugin-svelte": "^7.3.0",
+    "@tailwindcss/vite": "^4.1.18",
+    "@types/node": "^26.6.4",
+    "@types/webextension-polyfill": "^0.12.3",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.12.0",
+    "eslint-plugin-svelte": "^3.14.0",
+    "fflate": "^0.8.3",
+    "globals": "^17.3.0",
+    "prettier": "^3.9.9",
+    "prettier-plugin-svelte": "^4.1.1",
+    "svelte-check": "^4.4.2",
+    "tailwindcss": "^4.1.18",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.1",
+    "vite": "^8.3.3",
+    "vitest": "^5.0.3",
+    "web-ext": "^10.2.0"
+  },
+  "overrides": {
+    "fx-runner": {
+      "shell-quote": "^1.12.0"
+    }
+  }
+}

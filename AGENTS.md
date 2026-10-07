@@ -9,3 +9,7 @@
 - Tests use isolated profiles and intercepted website fixtures, never real X accounts. Verify cross-tab grants, expiry/restart, allowed routes and browser differences at their useful public boundaries.
 - Use Worktrunk for worktrees. Editing agents stay in their own worktrees; preserve unrelated work. Commit by concern, do not publish without a release instruction.
 - Use Vikunja through Executor for internal task state. Recall Hindsight before substantial work; do not retain memory unless the human explicitly requests it.
+
+- Build Svelte with `compilerOptions.fragments: tree` so Firefox packages avoid dynamic HTML-template warnings. Browser packages use separate background declarations; Firefox minimum 142 covers the local-only data-collection manifest declaration.
+- Gate UI lives in a bundled extension iframe. Save and restore the timeline region display style and inert/hidden state. Author CSS can override `hidden`, so enforce display only while gated.
+- Firefox runtime tests install a temporary add-on through its remote-debugging protocol in an isolated Playwright profile. Keep this adapter in tests, never ship debugging permissions or endpoints.

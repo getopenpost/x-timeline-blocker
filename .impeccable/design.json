@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-07T20:35:00Z",
+  "title": "Timer UI",
+  "extensions": {
+    "colorMeta": {
+      "focal": {
+        "role": "primary",
+        "displayName": "Dither orange",
+        "canonical": "var(--action-focal)"
+      },
+      "canvas": {
+        "role": "neutral",
+        "displayName": "System canvas",
+        "canonical": "var(--background)"
+      }
+    },
+    "typographyMeta": {
+      "timer": {
+        "displayName": "Countdown",
+        "purpose": "Tabular browsing and lock countdowns."
+      },
+      "state": {
+        "displayName": "Timer state",
+        "purpose": "Ready, active, locked or unavailable."
+      },
+      "attribution": {
+        "displayName": "OpenPost",
+        "purpose": "Unobtrusive attribution in every state."
+      }
+    }
+  },
+  "narrative": {
+    "overview": "Use the bundled OpenPost Dither theme without local theme overrides. WebThemeRuntime applies the light or dark scheme from the system preference.",
+    "keyCharacteristics": [
+      "Shared orange Dither",
+      "System light/dark",
+      "One timer and one next action"
+    ]
+  }
+}

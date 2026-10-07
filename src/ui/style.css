@@ -1,0 +1,82 @@
+@import 'tailwindcss';
+@import '@openpost/ui/style.css';
+@source '../../node_modules/@openpost/ui/dist';
+:root {
+  font-size: 16px;
+  font-synthesis: none;
+  color-scheme: light dark;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--theme-font-sans);
+}
+main {
+  min-height: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 20px;
+}
+main.popup {
+  width: 300px;
+}
+h1 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.4;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+.countdown {
+  margin: 20px 0 22px;
+  font-size: 64px;
+  font-family: var(--theme-font-mono);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.action {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.action [data-slot='button'] {
+  min-height: 44px;
+  padding-inline: 24px;
+  cursor: pointer;
+}
+.attribution {
+  margin-top: 28px;
+  color: var(--muted-foreground);
+  font-size: 12px;
+  text-decoration: none;
+  text-underline-offset: 3px;
+}
+.attribution:hover {
+  color: var(--foreground);
+  text-decoration: underline;
+}
+a:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 5px;
+}
+::selection {
+  background: var(--selection);
+  color: var(--foreground);
+}
+html {
+  scrollbar-color: var(--border) var(--background);
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
