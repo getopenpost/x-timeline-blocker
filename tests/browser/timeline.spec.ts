@@ -147,6 +147,10 @@ test('popup and gate render ready, active and locked in light, dark and narrow l
     await expect(
       view.getByRole('button', { name: 'Browse timeline' }),
     ).toBeVisible();
+    await expect(view.getByRole('link', { name: 'OpenPost' })).toHaveAttribute(
+      'href',
+      'https://openpo.st',
+    );
     await view.screenshot({
       animations: 'disabled',
       path: `${SCREENSHOTS}/popup-light.png`,

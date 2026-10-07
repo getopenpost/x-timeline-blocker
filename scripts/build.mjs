@@ -9,7 +9,7 @@ const base = {
   name: 'X Timeline Blocker by OpenPost',
   version: pkg.version,
   description: pkg.description,
-  homepage_url: 'https://getopenpost.app',
+  homepage_url: 'https://openpo.st',
   icons: { 128: 'icon-128.png' },
   permissions: ['storage', 'alarms'],
   host_permissions: ['https://x.com/*', 'https://twitter.com/*'],

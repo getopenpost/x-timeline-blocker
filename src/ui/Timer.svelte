@@ -110,7 +110,7 @@
   </div>
   <a
     class="attribution"
-    href="https://getopenpost.app"
+    href="https://openpo.st"
     target="_blank"
     rel="noopener noreferrer">OpenPost</a
   >
