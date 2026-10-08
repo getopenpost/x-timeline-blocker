@@ -10,7 +10,7 @@ export const EXTENSION = resolve('dist/chromium');
 export async function launch(profile: string): Promise<BrowserContext> {
   const context = await chromium.launchPersistentContext(profile, {
     channel: 'chromium',
-    headless: true,
+    headless: !process.env.CI,
     args: [
       `--disable-extensions-except=${EXTENSION}`,
       `--load-extension=${EXTENSION}`,

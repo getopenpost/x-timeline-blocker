@@ -7,6 +7,7 @@
 - One durable timer governs every tab and popup. Grant five minutes starting from explicit Browse Timeline, then wait until one hour after that grant. Serialize grants, derive countdowns from persisted timestamps, and survive background restarts.
 - Validate messages and stored state. Content scripts cannot create independent timers. Host permissions cover only x.com and twitter.com.
 - Tests use isolated profiles and intercepted website fixtures, never real X accounts. Verify cross-tab grants, expiry/restart, allowed routes and browser differences at their useful public boundaries.
+- CI runs Chromium headed under Xvfb. Headless Linux input can stall after a closed-shadow iframe is replaced; keep the real pointer workflow and its assertions intact.
 - Use Worktrunk for worktrees. Editing agents stay in their own worktrees; preserve unrelated work. Commit by concern, do not publish without a release instruction.
 - Use Vikunja through Executor for internal task state. Recall Hindsight before substantial work; do not retain memory unless the human explicitly requests it.
 
