@@ -16,3 +16,5 @@
 - Firefox runtime tests install a temporary add-on through its remote-debugging protocol in an isolated Playwright profile. Keep this adapter in tests, never ship debugging permissions or endpoints.
 
 - AMO metadata uses `version.custom_license` with the complete root LICENSE text. Keep that text synchronized with LICENSE and do not also set a license slug.
+
+- Chrome Store updates use the official v2 client with service-account ADC. Release tags must match package and Chromium manifest versions. Never retry upload or publish automatically; check the Developer Dashboard after an uncertain response. Configure the chrome-store environment as documented in docs/chrome-release.md. Store credentials never belong in source archives.
