@@ -4,7 +4,7 @@ Five minutes of timeline browsing per hour. Keep posting, messages and notificat
 
 A browser extension by [OpenPost](https://openpo.st) for Chromium and Firefox. It works entirely locally and stores only its timer.
 
-![X Timeline Blocker pauses the home feed while the composer and navigation remain available](docs/screenshots/overview.webp)
+![X Timeline Blocker pauses the home feed while the composer and navigation remain available](docs/screenshots/x-timeline-blocker-08db3f799836.webp)
 
 The actual extension blocking the feed on OpenPost’s X preview.
 
