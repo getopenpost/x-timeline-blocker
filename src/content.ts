@@ -15,7 +15,7 @@ let hadInert = false;
 let previousDisplay = '';
 let previousPriority = '';
 let wasHidden: boolean | 'until-found' = false;
-function restore() {
+function restoreTarget() {
   if (currentTarget) {
     currentTarget.hidden = wasHidden;
     currentTarget.inert = hadInert;
@@ -28,6 +28,9 @@ function restore() {
     else currentTarget.style.removeProperty('display');
     currentTarget = null;
   }
+}
+function restore() {
+  restoreTarget();
   gate?.remove();
   gate = null;
 }
@@ -45,7 +48,13 @@ function reconcile() {
     isHomeUrl(location.href) &&
     (!available || statusAt(windowState).phase !== 'active');
   if (!shouldBlock) {
-    restore();
+    if (isHomeUrl(location.href) && gate?.isConnected) {
+      restoreTarget();
+      // Hide active gates without destroying the frame handling the grant click.
+      hideTarget(gate);
+    } else {
+      restore();
+    }
     return;
   }
   const target = document.querySelector<HTMLElement>(
@@ -59,13 +68,20 @@ function reconcile() {
     hideTarget(target);
     return;
   }
-  restore();
+  restoreTarget();
   currentTarget = target;
   hadInert = target.inert;
   wasHidden = target.hidden;
   previousDisplay = target.style.getPropertyValue('display');
   previousPriority = target.style.getPropertyPriority('display');
   hideTarget(target);
+  if (gate?.isConnected && gate.nextElementSibling === target) {
+    gate.hidden = false;
+    gate.inert = false;
+    gate.style.removeProperty('display');
+    return;
+  }
+  gate?.remove();
   gate = document.createElement('div');
   gate.dataset.openpostTimelineGate = '';
   const shadow = gate.attachShadow({ mode: 'closed' });
