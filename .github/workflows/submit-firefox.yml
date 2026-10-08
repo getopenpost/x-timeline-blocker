@@ -18,7 +18,8 @@ jobs:
       - uses: cachix/cachix-action@v16
         with:
           name: devenv
-      - uses: cachix/devenv-install-action@v1
+      - name: Install Devenv
+        run: nix profile add nixpkgs#devenv
       - run: devenv shell -- npm ci
       - name: Check release version
         if: github.event_name == 'push'

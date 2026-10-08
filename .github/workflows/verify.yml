@@ -14,7 +14,8 @@ jobs:
       - uses: cachix/cachix-action@v16
         with:
           name: devenv
-      - uses: cachix/devenv-install-action@v1
+      - name: Install Devenv
+        run: nix profile add nixpkgs#devenv
       - run: devenv shell -- npm ci
       - run: devenv shell -- npx playwright install --with-deps chromium firefox
       - run: devenv shell -- npm run verify
