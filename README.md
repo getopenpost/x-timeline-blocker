@@ -4,6 +4,10 @@ Five minutes of timeline browsing per hour. Keep posting, messages and notificat
 
 A browser extension by [OpenPost](https://openpo.st) for Chromium and Firefox. It works entirely locally and stores only its timer.
 
+![X Timeline Blocker popup with its five-minute browsing window ready](docs/screenshots/overview.webp)
+
+The extension popup, captured in an isolated browser profile.
+
 ## How it works
 
 Open X's home timeline and click **Browse timeline** to start a five-minute window. When time runs out, the feed pauses again. Your next window is available one hour after the previous one started.
@@ -61,6 +65,10 @@ npm run package        # Chromium, Firefox and source ZIPs in artifacts/
 Browser tests use isolated profiles and intercepted X/Twitter pages. They cover shared timers, expiry, restarts, navigation, timeline replacement and accessibility.
 
 The UI uses Svelte 5, Vite and `@openpost/ui`, with a fixed orange Dither theme and system light/dark appearance. Versioned UI packages are included in `vendor/`; a sibling OpenPost checkout is not required. See [product scope](PRODUCT.md), [design](DESIGN.md) and [contributor instructions](AGENTS.md).
+
+## Chrome Web Store releases
+
+A matching version tag runs verification, uploads the Chromium package and submits it for Google review. Follow [the one-time publisher and GitHub setup](docs/chrome-release.md) before the first release.
 
 ## Firefox releases
 
