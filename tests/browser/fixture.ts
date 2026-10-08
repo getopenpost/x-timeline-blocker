@@ -1,4 +1,10 @@
-import { chromium, type BrowserContext, type Page } from '@playwright/test';
+import {
+  chromium,
+  expect,
+  type BrowserContext,
+  type Frame,
+  type Page,
+} from '@playwright/test';
 import { resolve } from 'node:path';
 export const EXTENSION = resolve('dist/chromium');
 export async function launch(profile: string): Promise<BrowserContext> {
@@ -26,27 +32,27 @@ export async function popup(context: BrowserContext, id: string) {
   await page.goto(`chrome-extension://${id}/popup.html`);
   return page;
 }
-export async function gateFrame(page: Page) {
-  await page.waitForFunction(
-    () => !!document.querySelector('[data-openpost-timeline-gate]'),
-  );
-  await new Promise<void>((resolve) => {
-    const existing = page
-      .frames()
-      .find((frame) => frame.url().includes('/gate.html'));
-    if (existing) {
-      resolve();
-      return;
-    }
-    const listener = () => {
-      if (!page.frames().some((frame) => frame.url().includes('/gate.html')))
-        return;
-      page.off('framenavigated', listener);
-      resolve();
-    };
-    page.on('framenavigated', listener);
-  });
-  return page.frames().find((frame) => frame.url().includes('/gate.html'))!;
+export async function gateFrame(page: Page): Promise<Frame> {
+  let visibleFrame: Frame | undefined;
+  await expect
+    .poll(async () => {
+      for (const frame of page.frames()) {
+        if (!frame.url().includes('/gate.html') || frame.isDetached()) continue;
+        try {
+          const owner = await frame.frameElement();
+          const visible = await owner.isVisible();
+          await owner.dispose();
+          if (!visible) continue;
+          visibleFrame = frame;
+          return true;
+        } catch {
+          continue;
+        }
+      }
+      return false;
+    })
+    .toBe(true);
+  return visibleFrame!;
 }
 export const fixtureHtml = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>X fixture</title><style>
 *{box-sizing:border-box}body{margin:0;font:16px system-ui;color:#17202a;background:#fff}header{padding:20px;border-bottom:1px solid #ddd}nav{display:flex;gap:16px;flex-wrap:wrap}a{color:inherit}main{max-width:600px;margin:auto;border-inline:1px solid #ddd;min-height:80vh}h1{font-size:20px;padding:20px;margin:0}.compose{padding:20px;border-block:1px solid #ddd}textarea{width:100%;min-height:70px;font:inherit}button{padding:10px;margin-top:10px}article{padding:25px;border-bottom:1px solid #ddd}section{display:block}@media(prefers-color-scheme:dark){body{background:#090909;color:#f2f2f2}header,main,.compose,article{border-color:#333}textarea{color:inherit;background:#181818}}
