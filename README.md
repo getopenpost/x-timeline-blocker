@@ -1,36 +1,73 @@
 # X Timeline Blocker
 
-Five minutes of X timeline browsing per hour, with posting, messages and notifications available throughout. A standalone OpenPost extension for Chromium and Firefox.
+Five minutes of timeline browsing per hour. Keep posting, messages and notifications available while the feed is paused.
 
-Click **Browse timeline** to start five minutes. The next window opens one hour after that click. The timer follows you across tabs and browser restarts.
+A browser extension by [OpenPost](https://openpo.st) for Chromium and Firefox. It works entirely locally and stores only its timer.
+
+## How it works
+
+Open X's home timeline and click **Browse timeline** to start a five-minute window. When time runs out, the feed pauses again. Your next window is available one hour after the previous one started.
+
+For example, starting at 10:00 gives you access until 10:05. You can start another window at 11:00.
+
+- One timer follows you across tabs and browser restarts. Closing a tab does not pause the countdown.
+- The popup shows time left or the countdown to your next window. The toolbar badge shows remaining browsing minutes.
+- Only the home timeline on `x.com` and `twitter.com` is gated. Posting, messages, notifications, profiles, bookmarks and individual posts remain available.
+
+## Install
+
+Requires Chromium 120+ or Firefox 142+.
+
+### Build from source
+
+Use [Devenv](https://devenv.sh/) to enter the project's Node.js 24 environment:
+
+```sh
+devenv shell
+npm ci
+npm run build
+```
+
+The build produces `dist/chromium/` and `dist/firefox/`.
+
+### Chromium
+
+1. Open `chrome://extensions` and enable **Developer mode**.
+2. Choose **Load unpacked** and select `dist/chromium/`.
+3. Pin the extension and open X's home timeline. You should see **Timeline paused** and a **Browse timeline** button.
+
+### Firefox
+
+1. Open `about:debugging#/runtime/this-firefox`.
+2. Choose **Load Temporary Add-on** and select `dist/firefox/manifest.json`.
+3. Open X's home timeline. You should see **Timeline paused** and a **Browse timeline** button.
+
+Temporary Firefox installations last until the browser closes. For a persistent installation, use a Mozilla-signed release.
 
 ## Development
 
-Use the project Devenv environment:
+Run commands from the project directory inside `devenv shell`.
 
 ```sh
-devenv shell -- npm ci
-devenv shell -- npx playwright install chromium firefox
-devenv shell -- npm run verify
-devenv shell -- npm run package
+npx playwright install chromium firefox
+npm run check          # Svelte, TypeScript, ESLint and formatting
+npm test               # Timer and coordination tests
+npm run test:browser   # Packaged Chromium and native Firefox tests
+npm run lint:firefox   # Lint the built Firefox extension
+npm run verify         # All checks and tests, including Firefox lint
+npm run package        # Chromium, Firefox and source ZIPs in artifacts/
 ```
 
-Load `dist/chromium` unpacked in Chromium. Load `dist/firefox/manifest.json` temporarily through Firefox's `about:debugging`. Firefox requires version 142 or later. Packages and the review source archive are in `artifacts/`.
+Browser tests use isolated profiles and intercepted X/Twitter pages. They cover shared timers, expiry, restarts, navigation, timeline replacement and accessibility.
 
-Only home timeline regions on `https://x.com` and `https://twitter.com` are gated. SPA route changes and replaced timeline regions are supported. The extension stores only its timer locally and makes no network requests. OpenPost is an explicit attribution link.
+The UI uses Svelte 5, Vite and `@openpost/ui`, with a fixed orange Dither theme and system light/dark appearance. Versioned UI packages are included in `vendor/`; a sibling OpenPost checkout is not required. See [product scope](PRODUCT.md), [design](DESIGN.md) and [contributor instructions](AGENTS.md).
 
-## Tests
+## Firefox releases
 
-Unit tests own grant serialization and timestamp boundaries. Packaged browser tests use isolated profiles and intercepted X/Twitter fixtures. They cover cross-tab grants, live expiry, browser restart, permitted routes, compose, DOM replacement, corrupt-storage recovery and popup accessibility. Fixture tests do not prove compatibility with every live X DOM revision.
+The **Submit Firefox** workflow submits a listed version to Mozilla Add-ons on a `v<package version>` tag or manual dispatch. Set `AMO_API_KEY` and `AMO_API_SECRET` in the repository's `firefox-store` environment.
 
-## Firefox submission
+The workflow verifies the extension and uploads its build source for Mozilla review. Listing metadata lives in [docs/amo-metadata.json](docs/amo-metadata.json).
 
-The **Submit Firefox** GitHub workflow submits a listed AMO version on `v<package version>` tags or manual dispatch. Configure `AMO_API_KEY` and `AMO_API_SECRET` in GitHub secrets and the `firefox-store` environment before using it. Do not commit credentials.
+## License
 
-The workflow runs verification, builds Firefox and uploads the source archive alongside the bundle. `docs/amo-metadata.json` supplies the first listing summary, category, license and review build instructions. Add-on ID: `x-timeline-blocker@getopenpost.app`. Mozilla controls review and approval. Preparing the workflow does not publish the extension.
-
-Submission uses the official [web-ext listed channel and source upload](https://extensionworkshop.com/documentation/develop/web-ext-command-reference/). Firefox uses a nonpersistent [MV3 background script](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/background); Chromium uses a service worker.
-
-## Dependency note
-
-The extension's runtime dependencies pass npm's audit. `web-ext` has an upstream development-only `node-forge` advisory through its Android ADB dependency. This extension does not use ADB. `fx-runner` uses a patched `shell-quote` override. Keep the lockfile and review future updates before removing that override.
+[AGPL-3.0-only](LICENSE).
