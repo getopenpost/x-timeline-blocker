@@ -10,17 +10,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: cachix/install-nix-action@v31
-      - uses: cachix/cachix-action@v16
+      - uses: actions/setup-node@v4
         with:
-          name: devenv
-      - name: Install Devenv
-        run: nix profile add nixpkgs#devenv
-      - run: devenv shell -- npm ci
-      - run: devenv shell -- npx playwright install --with-deps chromium firefox
-      - run: devenv shell -- npm run verify
-      - run: devenv shell -- npm run package
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium firefox
+      - run: npm run verify
+      - run: npm run package
       - uses: actions/upload-artifact@v4
         with:
           name: x-timeline-blocker-packages
           path: artifacts/*.zip
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: browser-failures
+          path: test-results/

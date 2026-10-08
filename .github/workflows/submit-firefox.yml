@@ -14,26 +14,24 @@ jobs:
     environment: firefox-store
     steps:
       - uses: actions/checkout@v5
-      - uses: cachix/install-nix-action@v31
-      - uses: cachix/cachix-action@v16
+      - uses: actions/setup-node@v4
         with:
-          name: devenv
-      - name: Install Devenv
-        run: nix profile add nixpkgs#devenv
-      - run: devenv shell -- npm ci
+          node-version: 24
+          cache: npm
+      - run: npm ci
       - name: Check release version
         if: github.event_name == 'push'
         env:
           RELEASE_TAG: ${{ github.ref_name }}
-        run: devenv shell -- node -e 'const p=require("./package.json"); if(process.env.RELEASE_TAG !== "v"+p.version) process.exit(1)'
-      - run: devenv shell -- npx playwright install --with-deps chromium firefox
-      - run: devenv shell -- npm run verify
-      - run: devenv shell -- npm run package
+        run: node -e 'const p=require("./package.json"); if(process.env.RELEASE_TAG !== "v"+p.version) process.exit(1)'
+      - run: npx playwright install --with-deps chromium firefox
+      - run: npm run verify
+      - run: npm run package
       - name: Submit listed add-on and sources to AMO
         env:
           WEB_EXT_API_KEY: ${{ secrets.AMO_API_KEY }}
           WEB_EXT_API_SECRET: ${{ secrets.AMO_API_SECRET }}
-        run: devenv shell -- node scripts/submit-firefox.mjs
+        run: node scripts/submit-firefox.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:

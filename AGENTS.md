@@ -1,7 +1,7 @@
 # X Timeline Blocker
 
 - Standalone Chromium and Firefox WebExtension. No backend, accounts, analytics or remote code.
-- Use the project Devenv environment. Keep UI in Svelte 5 with the versioned OpenPost UI and Dither archives in vendor/. Fixed orange Dither family, system light/dark scheme, no theme picker.
+- Use the project Devenv environment locally. GitHub Actions uses Node 24 and native Ubuntu browser libraries; Nix ldd cannot validate the downloaded Firefox dependencies. Keep UI in Svelte 5 with the versioned OpenPost UI and Dither archives in vendor/. Fixed orange Dither family, system light/dark scheme, no theme picker.
 - Keep popup and timeline gate minimal: timer, one next action, OpenPost attribution. No boilerplate disclaimers or feature lectures in the UI.
 - Gate only X/Twitter home timeline routes. Preserve navigation, posting, messages, notifications, profiles, bookmarks and permalinks. Scope DOM hiding to the timeline region, remove it when leaving home, support SPA navigation.
 - One durable timer governs every tab and popup. Grant five minutes starting from explicit Browse Timeline, then wait until one hour after that grant. Serialize grants, derive countdowns from persisted timestamps, and survive background restarts.
